@@ -1,30 +1,37 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
-import { CreateTeamsDto } from './dto/create-teams.dto';
 import { AddEmployeeForTeamsDto } from './dto/add-employee-for-teams.dto';
 import { DeleteEmployeeForTeamsDto } from './dto/delete-employee-for-teams.dto';
+import { CreateEmployeeDto } from '../employee/dto/create-employee.dto';
+import { TeamsService } from './teams.service';
+
 
 @Controller('teams')
 export class TeamsController {
+
+  constructor(private readonly teamsService: TeamsService) {
+  }
+
+
   @Get()
-  getAll(): string {
-    return 'GetAllTeams';
+  getAll() {
+    return this.teamsService.getAll();
   }
   @Get('/sortTop')
-  getTopTeams(): string {
-    return 'GetTopTeams';
+  getTopTeams() {
+    return this.teamsService.getTopTeams();
   }
   @Post('/create')
   @HttpCode(HttpStatus.CREATED)
-  createTeams(@Body() createTeamsDto: CreateTeamsDto): string {
-    return 'Create teams';
+  createTeams(@Body() createEmployeeDto: CreateEmployeeDto): string {
+    return 'Create employee';
   }
   @Delete(':id')
-  deleteTeams(@Param('id') id: string): string {
-    return 'delete';
+  deleteTeams(@Param('id') id: string) {
+    return this.teamsService.remove(id);
   }
   @Get(':id')
-  getInfoAboutTeam(@Param('id') id: string): string {
-    return 'Get one team';
+  getInfoAboutTeam(@Param('id') id: string) {
+    return this.teamsService.findOne(id);
   }
   @Post('/addEmployeeForTeams')
   @HttpCode(HttpStatus.CREATED)
