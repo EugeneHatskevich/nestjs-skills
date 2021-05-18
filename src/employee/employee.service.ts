@@ -1,33 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { EmployeeEntity } from './employee.entity';
-import { TeamsEntity } from '../teams/teams.entity';
+import { InjectModel } from '@nestjs/sequelize';
+import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { Employee } from './employee.models';
 
 @Injectable()
 export class EmployeeService {
-  constructor(
-    @InjectRepository(EmployeeEntity)
-    private employeeRepository: Repository<EmployeeEntity>,
-  ) {}
 
-  findAll(): Promise<EmployeeEntity[]> {
-    return this.employeeRepository.find();
+  constructor(@InjectModel(Employee) private employeeRepository: typeof Employee) {
   }
 
-  findOne(id: string): Promise<EmployeeEntity> {
-    return this.employeeRepository.findOne(id);
+  async createTeam(dto:CreateEmployeeDto) {
+    const employee = await this.employeeRepository.create(dto);
+    return employee;
   }
 
-  async remove(id: string): Promise<void> {
-    await this.employeeRepository.delete(id);
+  async getAllEmployee() {
+    const employee = await this.employeeRepository.findAll();
+    return employee;
   }
 
-  filterByName(name: string): Promise<EmployeeEntity[]> {
-    return this.employeeRepository.find({where:{firstName:name}});
+  async getTopByCreated() {
+    const employee = await this.employeeRepository.findAll({limit: 5, order: [["createdAt", "DESC"]]});
+    return employee;
   }
 
-  getTopCreated(): Promise<EmployeeEntity[]> {
-    return this.employeeRepository.find({order: {createdAt:'ASC'}});
+  async getEmployeeByName(name: string) {
+    const employee = await this.employeeRepository.findAll({where: {firstName: name}});
+    return employee;
+  }
+
+  async getEmployeeById(id: number) {
+    const employee = await this.employeeRepository.findByPk(id);
+    return employee;
+  }
+
+  async removeEmployee(id: number) {
+    const employee = await this.employeeRepository.destroy({where: {id: id}});
+    return employee;
   }
 }

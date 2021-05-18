@@ -1,45 +1,36 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
-import { AddEmployeeForTeamsDto } from './dto/add-employee-for-teams.dto';
-import { DeleteEmployeeForTeamsDto } from './dto/delete-employee-for-teams.dto';
-import { CreateEmployeeDto } from '../employee/dto/create-employee.dto';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { TeamsService } from './teams.service';
-
+import { CreateTeamsDto } from './dto/create-teams.dto';
 
 @Controller('teams')
 export class TeamsController {
 
-  constructor(private readonly teamsService: TeamsService) {
+  constructor(private teamsService: TeamsService) {
   }
 
+  @Post()
+  create(@Body() teamDto: CreateTeamsDto){
+    return this.teamsService.createTeam(teamDto)
+  }
 
   @Get()
-  getAll() {
-    return this.teamsService.getAll();
+  getAllTeams(){
+    return this.teamsService.getAllTeams()
   }
-  @Get('/sortTop')
-  getTopTeams() {
-    return this.teamsService.getTopTeams();
+
+  @Get('/top')
+  getTopTeams(){
+    return this.teamsService.getTopTeams()
   }
-  @Post('/create')
-  @HttpCode(HttpStatus.CREATED)
-  createTeams(@Body() createEmployeeDto: CreateEmployeeDto): string {
-    return 'Create employee';
-  }
+
   @Delete(':id')
-  deleteTeams(@Param('id') id: string) {
-    return this.teamsService.remove(id);
+  removeTeam(@Param('id') id: number){
+    return this.teamsService.removeTeam(id)
   }
+
   @Get(':id')
-  getInfoAboutTeam(@Param('id') id: string) {
-    return this.teamsService.findOne(id);
+  getTeamById(@Param('id') id: number){
+    return this.teamsService.getTeamById(id)
   }
-  @Post('/addEmployeeForTeams')
-  @HttpCode(HttpStatus.CREATED)
-  addEmployeeForTeams(@Body() addEmployeeForTeamsDto: AddEmployeeForTeamsDto): string {
-    return 'Add employee for teams';
-  }
-  @Delete(':id/deleteEmployeeForTeams')
-  deleteEmployeeForTeams(@Body() deleteEmployeeForTeamsDto: DeleteEmployeeForTeamsDto, @Param('id') id: string): string {
-    return 'Delete employee for teams';
-  }
+
 }

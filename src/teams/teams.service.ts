@@ -1,28 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { TeamsEntity } from './teams.entity';
+import { InjectModel } from '@nestjs/sequelize';
+import { Teams } from './teams.models';
+import { CreateTeamsDto } from './dto/create-teams.dto';
+import sequelize from 'sequelize';
 
 @Injectable()
 export class TeamsService {
-  constructor(
-    @InjectRepository(TeamsEntity)
-    private teamsRepository: Repository<TeamsEntity>,
-  ) {}
 
-  getAll(): Promise<TeamsEntity[]> {
-    return this.teamsRepository.find();
+  constructor(@InjectModel(Teams) private teamsRepository: typeof Teams) {
   }
 
-  getTopTeams(): Promise<TeamsEntity[]> {
-    return this.teamsRepository.find({order: {employeeCount:'ASC'}});
+  async createTeam(dto: CreateTeamsDto) {
+    const team = await this.teamsRepository.create(dto)
+    return team
   }
 
-  findOne(id: string): Promise<TeamsEntity> {
-    return this.teamsRepository.findOne(id);
+  async getAllTeams() {
+    const teams = await this.teamsRepository.findAll()
+    return teams
   }
 
-  async remove(id: string): Promise<void> {
-    await this.teamsRepository.delete(id);
+  async getTopTeams() {
+    const topTeams = await this.teamsRepository.findAll({limit: 5, order:[["employeeCount", "DESC"]]})
+    return topTeams
   }
+
+  async removeTeam(id: number) {
+    const team = await this.teamsRepository.destroy({where: {id: id}});
+    return team;
+  }
+
+  async getTeamById(id: number) {
+    const team = await this.teamsRepository.findByPk(id);
+    return team;
+  }
+
 }

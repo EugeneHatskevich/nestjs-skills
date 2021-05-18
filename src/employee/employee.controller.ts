@@ -1,36 +1,40 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
+import { CreateEmployeeDto } from './dto/create-employee.dto';
 
 @Controller('employee')
 export class EmployeeController {
 
-  constructor(private readonly employeeService: EmployeeService) {
+  constructor(private employeeService: EmployeeService) {
+  }
+
+  @Post()
+  create(@Body() employeeDto: CreateEmployeeDto){
+    return this.employeeService.createTeam(employeeDto)
   }
 
   @Get()
-  getAll() {
-    return this.employeeService.findAll();
+  getAllEmployee(){
+    return this.employeeService.getAllEmployee()
   }
-  @Get('/sortAdd')
-  getTopCreated() {
-    return this.employeeService.getTopCreated();
+
+  @Get('top')
+  getTopByCreated(){
+    return this.employeeService.getTopByCreated()
   }
-  @Post('/create')
-  @HttpCode(HttpStatus.CREATED)
-  createEmployee(@Body() createEmployeeDto: CreateEmployeeDto): string {
-    return 'Create employee';
+
+  @Get('filter')
+  getEmployeeByName(@Query() query){
+    return this.employeeService.getEmployeeByName(query.name)
   }
+
   @Delete(':id')
-  deleteEmployee(@Param('id') id: string) {
-    return this.employeeService.remove(id);
+  removeEmployee(@Param('id') id: number){
+    return this.employeeService.removeEmployee(id)
   }
+
   @Get(':id')
-  getInfoAboutEmployee(@Param('id') id: string) {
-    return this.employeeService.findOne(id);
-  }
-  @Get('/filter/:name')
-  getFilterByName(@Param('name') name: string) {
-    return this.employeeService.filterByName(name);
+  getEmployeeById(@Param('id') id: number){
+    return this.employeeService.getEmployeeById(id)
   }
 }

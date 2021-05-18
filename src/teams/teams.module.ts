@@ -1,17 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TeamsController } from './teams.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TeamsEntity } from './teams.entity';
 import { TeamsService } from './teams.service';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Teams } from './teams.models';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([TeamsEntity])
-  ],
   controllers: [TeamsController],
-  providers: [TeamsService]
+  providers: [TeamsService],
+  imports: [SequelizeModule.forFeature([Teams])]
 })
-
-export class TeamsModule {
-
-}
+export class TeamsModule {}
