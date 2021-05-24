@@ -4,7 +4,7 @@ import { Company } from './company.models';
 
 @Injectable()
 export class CompanyService {
-
-  constructor(@InjectModel(Company) private companyRepository: typeof Company) {
-  }
+  constructor(
+    @InjectModel(Company) private companyRepository: typeof Company,
+  ) {}
 }

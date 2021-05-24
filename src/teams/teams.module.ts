@@ -7,6 +7,6 @@ import { Teams } from './teams.models';
 @Module({
   controllers: [TeamsController],
   providers: [TeamsService],
-  imports: [SequelizeModule.forFeature([Teams])]
+  imports: [SequelizeModule.forFeature([Teams])],
 })
 export class TeamsModule {}

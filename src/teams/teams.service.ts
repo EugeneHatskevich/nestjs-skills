@@ -2,37 +2,31 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Teams } from './teams.models';
 import { CreateTeamsDto } from './dto/create-teams.dto';
-import sequelize from 'sequelize';
 
 @Injectable()
 export class TeamsService {
-
-  constructor(@InjectModel(Teams) private teamsRepository: typeof Teams) {
-  }
+  constructor(@InjectModel(Teams) private teamsRepository: typeof Teams) {}
 
   async createTeam(dto: CreateTeamsDto) {
-    const team = await this.teamsRepository.create(dto)
-    return team
+    return await this.teamsRepository.create(dto);
   }
 
   async getAllTeams() {
-    const teams = await this.teamsRepository.findAll()
-    return teams
+    return await this.teamsRepository.findAll();
   }
 
   async getTopTeams() {
-    const topTeams = await this.teamsRepository.findAll({limit: 5, order:[["employeeCount", "DESC"]]})
-    return topTeams
+    return await this.teamsRepository.findAll({
+      limit: 5,
+      order: [['employeeCount', 'DESC']],
+    });
   }
 
   async removeTeam(id: number) {
-    const team = await this.teamsRepository.destroy({where: {id: id}});
-    return team;
+    return await this.teamsRepository.destroy({ where: { id: id } });
   }
 
   async getTeamById(id: number) {
-    const team = await this.teamsRepository.findByPk(id);
-    return team;
+    return await this.teamsRepository.findByPk(id);
   }
-
 }

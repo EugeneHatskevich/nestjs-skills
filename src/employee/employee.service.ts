@@ -5,37 +5,38 @@ import { Employee } from './employee.models';
 
 @Injectable()
 export class EmployeeService {
+  constructor(
+    @InjectModel(Employee) private employeeRepository: typeof Employee,
+  ) {}
 
-  constructor(@InjectModel(Employee) private employeeRepository: typeof Employee) {
-  }
-
-  async createTeam(dto:CreateEmployeeDto) {
-    const employee = await this.employeeRepository.create(dto);
-    return employee;
+  async createTeam(dto: CreateEmployeeDto) {
+    return await this.employeeRepository.create(dto);
   }
 
   async getAllEmployee() {
-    const employee = await this.employeeRepository.findAll();
-    return employee;
+    return await this.employeeRepository.findAll();
   }
 
   async getTopByCreated() {
-    const employee = await this.employeeRepository.findAll({limit: 5, order: [["createdAt", "DESC"]]});
-    return employee;
+    return await this.employeeRepository.findAll({
+      limit: 5,
+      order: [['createdAt', 'DESC']],
+    });
   }
 
   async getEmployeeByName(name: string) {
-    const employee = await this.employeeRepository.findAll({where: {firstName: name}});
-    return employee;
+    return await this.employeeRepository.findAll({
+      where: { firstName: name },
+    });
   }
 
   async getEmployeeById(id: number) {
-    const employee = await this.employeeRepository.findByPk(id);
-    return employee;
+    return await this.employeeRepository.findByPk(id);
   }
 
   async removeEmployee(id: number) {
-    const employee = await this.employeeRepository.destroy({where: {id: id}});
-    return employee;
+    return await this.employeeRepository.destroy({
+      where: { id: id },
+    });
   }
 }

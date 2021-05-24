@@ -1,10 +1,10 @@
-import { IsInt, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCompanyDto {
-  @Min(1)
-  readonly name: string
-
+  @IsNotEmpty()
+  @IsString()
+  readonly name: string;
+  @IsNotEmpty()
   @IsInt()
-  readonly teamsCount: number
-
+  readonly teamsCount: number;
 }

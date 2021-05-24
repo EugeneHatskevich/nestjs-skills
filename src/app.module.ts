@@ -13,27 +13,19 @@ import { CompanyModule } from './company/company.module';
   imports: [
     SequelizeModule.forRoot({
       dialect: 'postgres',
-      host: 'ec2-34-202-54-225.compute-1.amazonaws.com',
-      username: 'kjkxucfpswylti',
-      password: 'ba116a7c6650225860d88c1f957f6342cb39b88f32623b3ddbc6897ee2cc9132',
+      host: 'localhost',
+      username: 'postgres',
+      password: 'to3NgKhnQ4rmQga7oBbf',
       port: 5432,
-      database: 'dcim5c2c7uppsr',
+      database: 'postgres',
       models: [Teams, Employee, Company],
       autoLoadModels: true,
-      dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false,
-        },
-      },
     }),
     TeamsModule,
     EmployeeModule,
-    CompanyModule
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-}
-
+export class AppModule {}
